@@ -5,9 +5,20 @@ VITA_IP=192.168.0.10
 VITA_PORT=1337
 
 if [ $# -lt 1 ]
-  then
-    echo "Usage: $0 file(s).vpk" 
-    exit 1
+then
+  echo "Usage: $0 file(s).vpk" 
+  exit 1
+fi
+
+if [ $1 == "clean" ]
+then
+  echo -n "Cleaning temporary directories ... "
+  rm -rf *.dir
+  echo "done."
+  echo -n "Cleaning repacked files ... "
+  rm -f repack*.vpk
+  echo "done."
+  exit 0
 fi
 
 while [ $# -ne 0 ]
@@ -18,6 +29,9 @@ do
   if [ -d $DIR ]; then echo Removing previous temporary folder $DIR ; rm -rf $DIR ; fi
 
   case $VPK in
+    desmume_libretro.vpk)
+      HW=ds
+      ;;
     fbalpha_libretro.vpk|mame2003_libretro.vpk)
       HW=arcade
       ;;
