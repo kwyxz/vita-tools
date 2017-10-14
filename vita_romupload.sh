@@ -1,28 +1,37 @@
 #!/bin/bash
 
+VITA_IP=192.168.0.10
+VITA_PORT=1337
+VITA_ROMDIR=/ux0:/homebrew/roms/
+
 if [ $# -eq 0 ]; then
   echo "Error: no argument present. Please enter at least one rom folder name."
   exit 1
 fi
 
+push_to_vita () {
+  HW=$(echo $1 | rev | cut -d '/' -f1 | rev)
+  lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd $VITA_ROMDIR$HW ; mput -c \"$1/$2\""
+}
+
 check_country () {
-  ROMFILE=$(find . -name "$1 (*$2*)*")
-  case "$ROMFILE" in
+  GAMENAME=$(find . -name "$2 (*$3*)*" | grep -v BIOS | head -n1)
+  case "$GAMENAME" in
    '') # no rom file found for this country
-      case "$2" in
-      "France") check_country "$1" "Europe" ;;
-      "Europe") check_country "$1" "USA" ;;
-#      "USA") check_country "$1" "Japan" ;;
+      case "$3" in
+      "France") check_country "$1" "$2" "Europe" ;;
+      "Europe") check_country "$1" "$2" "USA" ;;
+#      "USA") check_country "$2" "Japan" ;;
       esac ;;
-   *) find . -name "$1 (*$2*)*" ;;
+   *) push_to_vita "$1" "$GAMENAME" ;;
   esac
 }
 
 extract_romname () {
   cd $1
   while read romname; do
-    check_country "$romname" "France"
-  done < <(ls -1 | cut -d '(' -f 1 | sort | uniq | grep -vi BIOS) 
+    check_country "$folder" "$romname" "France"
+  done < <(ls -1 | cut -d '(' -f 1 | sort | uniq) 
   cd ..
 }
 
