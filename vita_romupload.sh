@@ -11,7 +11,7 @@ fi
 
 push_to_vita () {
   HW=$(echo $1 | rev | cut -d '/' -f1 | rev)
-  lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd $VITA_ROMDIR$HW ; mput -c \"$1/$2\""
+  lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd $VITA_ROMDIR$HW ; mput -c \"$1/$2\"" > /dev/null
 }
 
 check_country () {
