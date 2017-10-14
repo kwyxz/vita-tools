@@ -19,10 +19,10 @@ check_country () {
   case "$GAMENAME" in
    '') # no rom file found for this country
       case "$3" in
+      "USA") check_country "$1" "$2" "France" ;;
       "France") check_country "$1" "$2" "Europe" ;;
       "Europe") check_country "$1" "$2" "World" ;;
-      "World") check_country "$1" "$2" "USA" ;;
-#      "USA") check_country "$1" "$2" "Japan" ;;
+#      "World") check_country "$1" "$2" "Japan" ;;
       esac ;;
    *) push_to_vita "$1" "$GAMENAME" ;;
   esac
@@ -31,7 +31,7 @@ check_country () {
 extract_romname () {
   cd $1
   while read romname; do
-    check_country "$folder" "$romname" "France"
+    check_country "$folder" "$romname" "USA"
   done < <(ls -1 | cut -d '(' -f 1 | sort | uniq) 
   cd ..
 }
