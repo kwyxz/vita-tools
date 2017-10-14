@@ -15,13 +15,14 @@ push_to_vita () {
 }
 
 check_country () {
-  GAMENAME=$(find . -name "$2 (*$3*)*" | grep -v BIOS | head -n1)
+  GAMENAME=$(find . -name "$2 (*$3*)*" | grep -v BIOS | grep -v \(Unl | head -n1)
   case "$GAMENAME" in
    '') # no rom file found for this country
       case "$3" in
       "France") check_country "$1" "$2" "Europe" ;;
-      "Europe") check_country "$1" "$2" "USA" ;;
-#      "USA") check_country "$2" "Japan" ;;
+      "Europe") check_country "$1" "$2" "World" ;;
+      "World") check_country "$1" "$2" "USA" ;;
+#      "USA") check_country "$1" "$2" "Japan" ;;
       esac ;;
    *) push_to_vita "$1" "$GAMENAME" ;;
   esac
