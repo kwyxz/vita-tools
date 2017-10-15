@@ -36,27 +36,27 @@ Within the "roms" folder, subfolders named after the hardware
 
 Supported list of subfolders is the following:
 
- 32x - Sega 32x
- arcade - for Final Burn supported arcade hardware
- cps1 - Capcom Play System 1
- cps2 - Capcom Play System 2
- ds - Nintendo DS
- neogeo - SNK Neo Geo AES / MVS
- gb - Nintendo Game Boy
- gbc - Nintendo Game Boy Color
- gba - Nintendo Game Boy Advance
- gg - Sega Game Gear
- md - Sega Mega Drive / Genesis
- megacd - Sega CD / Mega CD
- lynx - Atari Lynx
- nes - Nintendo NES
- ngp - SNK Neo Geo Pocket
- ngpc - SNK Neo Geo Pocket Color
- pce - NEC PC Engine / TurboGraphx 16
- sms - Sega Mark III / Master System
- snes - Nintendo Super Famicom / Super Nintendo
- ws - Bandai Wonderswan
- wsc - Bandai Wonderswan Color
+- 32x - Sega 32x
+- arcade - for Final Burn supported arcade hardware
+- cps1 - Capcom Play System 1
+- cps2 - Capcom Play System 2
+- ds - Nintendo DS
+- neogeo - SNK Neo Geo AES / MVS
+- gb - Nintendo Game Boy
+- gbc - Nintendo Game Boy Color
+- gba - Nintendo Game Boy Advance
+- gg - Sega Game Gear
+- md - Sega Mega Drive / Genesis
+- megacd - Sega CD / Mega CD
+- lynx - Atari Lynx
+- nes - Nintendo NES
+- ngp - SNK Neo Geo Pocket
+- ngpc - SNK Neo Geo Pocket Color
+- pce - NEC PC Engine / TurboGraphx 16
+- sms - Sega Mark III / Master System
+- snes - Nintendo Super Famicom / Super Nintendo
+- ws - Bandai Wonderswan
+- wsc - Bandai Wonderswan Color
 
 If you're adding Arcade games, you'll need Mame for name scrapping
 Other hardware rom name scrapping is WIP
@@ -73,11 +73,11 @@ Takes one or several MAME rom names as arguments then pushes every game using th
 
 Takes one or several folder names (make sure your folders are named appropriately (see lpl section above about folder naming) then selects the most appropriate version of a ROM to push:
 
- US first
- French second (since I am french, but you can replace this with your own language or comment out in the script)
- Europe third
- World fourth
- Japan if nothing else exists (so many RPGs on the SNES...)
+- US first
+- French second (since I am french, but you can replace this with your own language or comment out in the script)
+- Europe third
+- World fourth
+- Japan if nothing else exists (so many RPGs on the SNES...)
 
 It then pushes the games to the respective folders on the Vita
 The folders must exist on the Vita otherwise the FTP command will fail
