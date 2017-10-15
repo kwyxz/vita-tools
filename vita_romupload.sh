@@ -22,7 +22,7 @@ check_country () {
       "USA") check_country "$1" "$2" "France" ;;
       "France") check_country "$1" "$2" "Europe" ;;
       "Europe") check_country "$1" "$2" "World" ;;
-#      "World") check_country "$1" "$2" "Japan" ;;
+      "World") check_country "$1" "$2" "Japan" ;;
       esac ;;
    *) push_to_vita "$1" "$GAMENAME" ;;
   esac
