@@ -51,8 +51,8 @@ do
         ;;
       fba|neogeo|cps[1-2])
         PLAYLIST="FB Alpha - Arcade Games.lpl"
-        LIBRETRO="app0:/fbalpha2012_libretro.self"
-        LIBNAME="FB Alpha 2012"
+        LIBRETRO="app0:/fbalpha_libretro.self"
+        LIBNAME="FB Alpha"
         _mame "$GAMENAME"
         ;;
       gba)
@@ -86,14 +86,14 @@ do
       md)
         EXTENSION=".gen"
         PLAYLIST="Sega - Mega Drive - Genesis.lpl"
-        LIBRETRO="app0:/picodrive_libretro.self"
-        LIBNAME="Picodrive"
+        LIBRETRO="app0:/genesis_plus_gx_libretro.self"
+        LIBNAME="Genesis Plus GX"
         _getname "$GAMENAME" "$EXTENSION"
         ;;
-      mame2000)
+      mame2003)
         PLAYLIST="MAME.lpl"
-        LIBRETRO="app0:/mame2000_libretro.self"
-        LIBNAME="MAME 2000"
+        LIBRETRO="app0:/mame2003_libretro.self"
+        LIBNAME="MAME 2003"
         _mame "$GAMENAME"
         ;;
       megacd)
@@ -148,8 +148,8 @@ do
       snes)
         EXTENSION=".sfc"
         PLAYLIST="Nintendo - Super Nintendo Entertainment System.lpl"
-        LIBRETRO="app0:/snes9x2002_libretro.self"
-        LIBNAME="Snes9x 2002"
+        LIBRETRO="app0:/snes9x2005_libretro.self"
+        LIBNAME="Snes9x 2005"
         _getname "$GAMENAME" "$EXTENSION"
         ;;
       ws)
