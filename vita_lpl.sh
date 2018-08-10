@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MAMEBIN=/usr/local/games/mame/mame64
-VITA_IP=192.168.0.10
+VITA_IP=192.168.1.10
 VITA_PORT=1337
 
 echo -n "Cleaning up local directory... "
@@ -136,6 +136,13 @@ do
         PLAYLIST="NEC - PC Engine - TurboGrafx 16.lpl"
         LIBRETRO="app0:/mednafen_pce_fast_libretro.self"
         LIBNAME="Mednafen PCE Fast"
+        _getname "$GAMENAME" "$EXTENSION"
+        ;;
+      ps1)
+        EXTENSION=".cue"
+        PLAYLIST="Sony - PlayStation.lpl"
+        LIBRETRO="app0:/pcsx_rearmed_libretro.self"
+        LIBNAME="PCSX ReArmed"
         _getname "$GAMENAME" "$EXTENSION"
         ;;
       sms)
