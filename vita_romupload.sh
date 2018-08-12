@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VITA_IP=192.168.0.10
+VITA_IP=192.168.1.10
 VITA_PORT=1337
 VITA_ROMDIR=/ux0:/homebrew/roms/
 
