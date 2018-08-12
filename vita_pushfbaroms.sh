@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VITA_IP=192.168.0.10
+VITA_IP=192.168.1.10
 VITA_PORT=1337
 MAME=/usr/local/games/mame/mame64
 
@@ -33,7 +33,11 @@ do
       CLONES=$($MAME -listclones | awk '{print $1}' | sort | uniq)
       if ! echo $CLONES | grep -q -w $GAME
       then
-        if [ -f /mnt/space/Games/mame2003/$GAME.zip ]
+        if [ "$DRIVERNAME" = "neogeo" ]
+        then
+          cd /mnt/space/Games/fba/
+          push_game fba $GAME.zip
+        elif [ -f /mnt/space/Games/mame2003/$GAME.zip ]
         then
           cd /mnt/space/Games/mame2003/
           push_game mame2003 $GAME.zip
