@@ -9,11 +9,11 @@ RETROPATH=ux0:/data/retroarch
 
 echo -n "Cleaning up local directory... "
 rm -f *.lpl
-echo done
+echo "done."
 
 echo -n "Cleaning up remote directory on Vita... "
 lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$RETROPATH ; mrm playlists/*" > /dev/null
-echo done
+echo "done."
 
 CONSOLELIST=$(lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$ROMPATH ; cls -1 " | tr -d $'\r' | sed -e 's/\/$//')
 
