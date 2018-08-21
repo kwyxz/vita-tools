@@ -33,7 +33,7 @@ do
       CLONES=$($MAME -listclones | awk '{print $1}' | sort | uniq)
       if ! echo $CLONES | grep -q -w $GAME
       then
-        if [ "$DRIVERNAME" = "neogeo" ]
+        if [ "$DRIVERNAME" = "neogeo" ] || [ "$DRIVERNAME" = "cps2" ]
         then
           cd /mnt/space/Games/fba/
           push_game fba $GAME.zip
