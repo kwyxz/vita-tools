@@ -3,6 +3,7 @@
 VITA_IP=192.168.1.10
 VITA_PORT=1337
 MAME=/usr/local/games/mame/mame64
+GAMESDIR=/mnt/space/Games/
 
 if [ $# -lt 1 ]
   then
@@ -35,15 +36,15 @@ do
       then
         if [ "$DRIVERNAME" = "neogeo" ] || [ "$DRIVERNAME" = "cps2" ]
         then
-          cd /mnt/space/Games/fba/
+          cd $GAMESDIR/fba/
           push_game fba $GAME.zip
-        elif [ -f /mnt/space/Games/mame2003/$GAME.zip ]
+        elif [ -f $GAMESDIR/mame2003/$GAME.zip ]
         then
-          cd /mnt/space/Games/mame2003/
+          cd $GAMESDIR/mame2003/
           push_game mame2003 $GAME.zip
-        elif [ -f /mnt/space/Games/fba/$GAME.zip ]
+        elif [ -f $GAMESDIR/fba/$GAME.zip ]
         then
-          cd /mnt/space/Games/fba/
+          cd $GAMESDIR/fba/
           push_game fba $GAME.zip
         fi
       fi
