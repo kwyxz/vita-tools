@@ -8,7 +8,7 @@ ROMPATH=$HOMEBREWPATH/roms
 RETROPATH=ux0:/data/retroarch
 
 echo -n "Cleaning up local directory... "
-rm *.lpl
+rm -f *.lpl
 echo done
 
 echo -n "Cleaning up remote directory on Vita... "
