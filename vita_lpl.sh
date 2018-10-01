@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MAMEBIN=/usr/local/games/mame/mame64
-VITA_IP=192.168.1.10
+VITA_IP=192.168.1.12
 VITA_PORT=1337
 HOMEBREWPATH=ux0:/homebrew
 ROMPATH=$HOMEBREWPATH/roms
@@ -66,8 +66,8 @@ do
       gba)
         EXTENSION=".gba"
         PLAYLIST="Nintendo - Game Boy Advance.lpl"
-        LIBRETRO="app0:/vba_next_libretro.self"
-        LIBNAME="VBA Next"
+        LIBRETRO="app0:/gpsp_libretro.self"
+        LIBNAME="gPSP"
         _getname "$GAMENAME" "$EXTENSION"
         ;;
       gb)
