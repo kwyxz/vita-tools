@@ -1,11 +1,6 @@
 #!/bin/bash
 
-MAMEBIN=/usr/local/games/mame/mame64
-VITA_IP=192.168.1.12
-VITA_PORT=1337
-HOMEBREWPATH=ux0:/homebrew
-ROMPATH=$HOMEBREWPATH/roms
-RETROPATH=ux0:/data/retroarch
+. ./settings
 
 echo -n "Cleaning up local directory... "
 rm -f *.lpl

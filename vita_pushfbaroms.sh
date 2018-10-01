@@ -1,9 +1,6 @@
 #!/bin/bash
 
-VITA_IP=192.168.1.12
-VITA_PORT=1337
-MAME=/usr/local/games/mame/mame64
-GAMESDIR=/mnt/space/Games/
+. ./settings
 
 if [ $# -lt 1 ]
   then
@@ -13,25 +10,25 @@ fi
 
 push_game () {
     echo -n "Pushing $2 to Vita in folder $1 ... "
-    lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /ux0:/homebrew/roms/$1/ ; mput -c $2" > /dev/null
+    lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$ROMPATH/$1/ ; mput -c $2" > /dev/null
     echo "done"
 }
 
 while [ $# -ne 0 ]
 do
-  GAMES=$($MAME -listfull | awk '{print $1}' | sort | uniq)
+  GAMES=$($MAMEBIN -listfull | awk '{print $1}' | sort | uniq)
   if ! echo $GAMES | grep -q -w $1  
   then
-    $MAME -listfull $1
+    $MAMEBIN -listfull $1
   else
-    DRIVERNAME=$($MAME -listsource $1 | awk '{print $2}' | cut -d '.' -f 1)
+    DRIVERNAME=$($MAMEBIN -listsource $1 | awk '{print $2}' | cut -d '.' -f 1)
     echo -n "Driver for game $1 is $DRIVERNAME, retrieving all games for this driver... "
-    DRIVERGAMES=$($MAME -listsource | grep -w "$DRIVERNAME" | awk '{print $1}')
+    DRIVERGAMES=$($MAMEBIN -listsource | grep -w "$DRIVERNAME" | awk '{print $1}')
     echo "done"
 
     while IFS= read -r GAME
     do
-      CLONES=$($MAME -listclones | awk '{print $1}' | sort | uniq)
+      CLONES=$($MAMEBIN -listclones | awk '{print $1}' | sort | uniq)
       if ! echo $CLONES | grep -q -w $GAME
       then
         if [ "$DRIVERNAME" = "neogeo" ] || [ "$DRIVERNAME" = "cps2" ] || [ "$DRIVERNAME" = "cps3" ]

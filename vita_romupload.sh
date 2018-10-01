@@ -1,8 +1,6 @@
 #!/bin/bash
 
-VITA_IP=192.168.1.10
-VITA_PORT=1337
-VITA_ROMDIR=/ux0:/homebrew/roms/
+. ./settings
 
 if [ $# -eq 0 ]; then
   echo "Error: no argument present. Please enter at least one rom folder name."

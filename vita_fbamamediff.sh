@@ -1,10 +1,6 @@
 #!/bin/bash
 
-VITA_IP=192.168.1.10
-VITA_PORT=1337
-HOMEBREWPATH=ux0:/homebrew
-ROMPATH=$HOMEBREWPATH/roms
-GAMESDIR=/mnt/space/Games/
+. ./settings
 
 echo -n "Getting list of MAME games... "
 MAMELIST=$(lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$ROMPATH/mame2003 ; cls -1 " | tr -d $'\r' | sed -e 's/\/$//')
