@@ -2,6 +2,9 @@
 
 . ./settings
 
+MAME2k3ROMDIR=$GAMESDIR/mame2003/
+FBAROMDIR=$GAMESDIR/fba/
+
 if [ $# -lt 1 ]
   then
     echo "Usage: $0 <MAME driver>" 
@@ -33,15 +36,15 @@ do
       then
         if [ "$DRIVERNAME" = "neogeo" ] || [ "$DRIVERNAME" = "cps2" ] || [ "$DRIVERNAME" = "cps3" ]
         then
-          cd $GAMESDIR/fba/
+          cd $FBAROMDIR/
           push_game fba $GAME.zip
-        elif [ -f $GAMESDIR/mame2003/$GAME.zip ]
+        elif [ -f $MAME2k3ROMDIR/$GAME.zip ]
         then
-          cd $GAMESDIR/mame2003/
+          cd $MAME2k3ROMDIR/
           push_game mame2003 $GAME.zip
-        elif [ -f $GAMESDIR/fba/$GAME.zip ]
+        elif [ -f $FBAROMDIR/$GAME.zip ]
         then
-          cd $GAMESDIR/fba/
+          cd $FBAROMDIR/
           push_game fba $GAME.zip
         fi
       fi
