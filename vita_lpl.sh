@@ -58,11 +58,18 @@ do
         LIBNAME="FB Alpha"
         _mame "$GAMENAME"
         ;;
+      fds)
+        EXTENSION=".fds"
+        PLAYLIST="Nintendo - Family Computer Disk System.lpl"
+        LIBRETRO="app0:/nestopia_libretro.self"
+        LIBNAME="Nestopia"
+        _getname "$GAMENAME" "$EXTENSION"
+        ;;
       gba)
         EXTENSION=".gba"
         PLAYLIST="Nintendo - Game Boy Advance.lpl"
-        LIBRETRO="app0:/gpsp_libretro.self"
-        LIBNAME="gPSP"
+        LIBRETRO="app0:/vba_next_libretro.self"
+        LIBNAME="VBA Next"
         _getname "$GAMENAME" "$EXTENSION"
         ;;
       gb)
