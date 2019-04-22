@@ -13,7 +13,7 @@ push_to_vita () {
 }
 
 check_country () {
-  GAMENAME=$(find . -name "$2 (*$3*)*" | grep -v BIOS | grep -v \(Unl | head -n1)
+  GAMENAME=$(find . -name "$2 (*$3*)*" | grep -v BIOS | grep -v \(Unl | grep -v \([dD]emo | head -n1)
   case "$GAMENAME" in
    '') # no rom file found for this country
       case "$3" in
