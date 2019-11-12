@@ -7,7 +7,7 @@ rm -f *.lpl
 echo "done."
 
 echo -n "Cleaning up remote directory on Vita... "
-lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$RETROPATH ; mrm playlists/*" > /dev/null
+lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$RETROPATH ; mrm -f playlists/*" > /dev/null
 echo "done."
 
 CONSOLELIST=$(lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$ROMPATH ; cls -1 " | tr -d $'\r' | sed -e 's/\/$//')
@@ -53,9 +53,9 @@ do
   SKIP=0
     case $CONSOLE in
       fba|neogeo|cps[1-2])
-        PLAYLIST="FB Alpha - Arcade Games.lpl"
-        LIBRETRO="app0:/fbalpha_libretro.self"
-        LIBNAME="FB Alpha"
+        PLAYLIST="FBNeo - Arcade Games.lpl"
+        LIBRETRO="app0:/fbneo_libretro.self"
+        LIBNAME="FBNeo"
         _mame "$GAMENAME"
         ;;
       fds)
@@ -68,8 +68,8 @@ do
       gba)
         EXTENSION=".gba"
         PLAYLIST="Nintendo - Game Boy Advance.lpl"
-        LIBRETRO="app0:/vba_next_libretro.self"
-        LIBNAME="VBA Next"
+        LIBRETRO="app0:/gpsp_libretro.self"
+        LIBNAME="gpSP"
         _getname "$GAMENAME" "$EXTENSION"
         ;;
       gb)

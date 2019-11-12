@@ -12,9 +12,10 @@ if [ $# -lt 1 ]
 fi
 
 push_game () {
-    echo -n "Pushing $2 to Vita in folder $1 ... "
+    GAMENAME=$(basename $2 .zip)
+    FULLNAME=$($MAMEBIN -listfull "$GAMENAME" | grep -v "Description" | cut -d '"' -f 2 | tr '/' '_' | sed 's/\ \~\ /\)\(/')
+    printf "%-10s%-10s%-60s\n" "$1" "$GAMENAME" "$FULLNAME"
     lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$ROMPATH/$1/ ; mput -c $2" > /dev/null
-    echo "done"
 }
 
 while [ $# -ne 0 ]
@@ -38,17 +39,15 @@ do
         then
           cd $FBAROMDIR/
           push_game fba $GAME.zip
-        elif [ -f $MAME2k3ROMDIR/$GAME.zip ]
-        then
-          cd $MAME2k3ROMDIR/
-          push_game mame2003 $GAME.zip
         elif [ -f $FBAROMDIR/$GAME.zip ]
         then
           cd $FBAROMDIR/
           push_game fba $GAME.zip
+        elif [ -f $MAME2k3ROMDIR/$GAME.zip ]
+        then
+          cd $MAME2k3ROMDIR/
+          push_game mame2003 $GAME.zip
         fi
-      else
-        echo "$GAME is a clone, skipping"
       fi
       done <<< $DRIVERGAMES
   fi
