@@ -127,6 +127,13 @@ do
         LIBNAME="Nestopia"
         _getname "$GAMENAME" "$EXTENSION"
         ;;
+      neocd)
+        EXTENSION=".cue"
+        PLAYLIST="SNK - Neo Geo CD.lpl"
+        LIBRETRO="app0:fbneo_libretro.self --subsystem neocd"
+        LIBNAME="FBNeo"
+        _getname "$GAMENAME" "$EXTENSION"
+        ;;
       ngp)
         EXTENSION=".ngp"
         PLAYLIST="SNK - Neo Geo Pocket.lpl"
