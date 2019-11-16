@@ -7,7 +7,7 @@ rm -f *.lpl
 echo "done."
 
 echo -n "Cleaning up remote directory on Vita... "
-lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$RETROPATH ; mrm -f playlists/*" > /dev/null
+# lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$RETROPATH ; mrm -f playlists/*" > /dev/null
 echo "done."
 
 CONSOLELIST=$(lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$ROMPATH ; cls -1 " | tr -d $'\r' | sed -e 's/\/$//')
@@ -25,19 +25,45 @@ _mame ()
 
 _getname ()
 {
-  if $(echo "$1" | grep -q "$2")
-  then
-    GAME=$(echo "$1" | tr '_' ' ' | tr -d '[!]')
-    if $(echo "$GAME" | grep -q \.zip)
-    then
-      FULLNAME=$(basename "$GAME" "$2.zip")
-    else
-      FULLNAME=$(basename "$GAME" "$2")
-    fi
-  else
-    echo "$1" has an unrecognized extension, skipping
-    SKIP=1
-  fi
+  case $3 in
+    fbneo|neogeo|cps[12]|mame2003)
+      MAMEGAME=$(basename $1 .zip)
+      FULLNAME=$($MAMEBIN -listfull "$MAMEGAME" | grep -v Description | cut -d '"' -f 2 | tr '/' '_' | sed 's/\ \~\ /\)\(/')
+      if [[ ! -z "$FULLNAME" ]]; then
+        echo -n .
+      else
+        PLAYLIST=""
+      fi
+      ;;
+    *)
+      if $(echo "$1" | grep -q "$2"); then
+        GAME=$(echo "$1" | tr '_' ' ' | tr -d '[!]')
+        if $(echo "$GAME" | grep -q \.zip); then
+          FULLNAME=$(basename "$GAME" "$2.zip")
+        else
+          FULLNAME=$(basename "$GAME" "$2")
+        fi
+      else
+        echo "$1" has an unrecognized extension, skipping
+        SKIP=1
+      fi
+      ;;
+  esac
+}
+
+_init_lpl ()
+{
+  echo -e "{\n  \"version\": \"1.0\",\n  \"items\": [" > "$1"
+}
+
+_add_game_to_json ()
+{
+  echo -e "    {\n      \"path\": \"$1\",\n      \"label\": \"$2\",\n      \"core_path\": \"$3\",\n      \"core_name\": \"$4\",\n      \"crc32\": \"$5|crc\",\n      \"db_name\": \"$6\"\n    }," >> "$6"
+}
+
+_close_lpl ()
+{
+  echo -e "  ]\n}" >> "$1"
 }
 
 for CONSOLE in $CONSOLELIST
@@ -48,190 +74,172 @@ do
   GAMELIST=$(lftp -c "$COMMAND" | tr ' ' '_' | tr -d $'\r')
   FULLNAME=""
 
+  case $CONSOLE in
+    fbneo|neogeo|cps[1-2])
+      PLAYLIST="FBNeo - Arcade Games.lpl"
+      LIBRETRO="app0:/fbneo_libretro.self"
+      LIBNAME="FBNeo"
+      ;;
+    fds)
+      EXTENSION=".fds"
+      PLAYLIST="Nintendo - Family Computer Disk System.lpl"
+      LIBRETRO="app0:/nestopia_libretro.self"
+      LIBNAME="Nestopia"
+      ;;
+    gba)
+      EXTENSION=".gba"
+      PLAYLIST="Nintendo - Game Boy Advance.lpl"
+      LIBRETRO="app0:/gpsp_libretro.self"
+      LIBNAME="gpSP"
+      ;;
+    gb)
+      EXTENSION=".gb"
+      PLAYLIST="Nintendo - Game Boy.lpl"
+      LIBRETRO="app0:/gambatte_libretro.self"
+      LIBNAME="Gambatte"
+      ;;
+    gbc)
+      EXTENSION=".gbc"
+      PLAYLIST="Nintendo - Game Boy Color.lpl"
+      LIBRETRO="app0:/gambatte_libretro.self"
+      LIBNAME="Gambatte"
+      ;;
+    gg)
+      EXTENSION=".gg"
+      PLAYLIST="Sega - Game Gear.lpl"
+      LIBRETRO="app0:/genesis_plus_gx_libretro.self"
+      LIBNAME="Genesis Plus GX"
+      ;;
+    md)
+      EXTENSION=".md"
+      PLAYLIST="Sega - Mega Drive - Genesis.lpl"
+      LIBRETRO="app0:/genesis_plus_gx_libretro.self"
+      LIBNAME="Genesis Plus GX"
+      ;;
+    mame2003)
+      EXTENSION=".zip"
+      PLAYLIST="MAME.lpl"
+      LIBRETRO="app0:/mame2003_libretro.self"
+      LIBNAME="MAME 2003"
+      ;;
+    megacd)
+      EXTENSION=".cue"
+      PLAYLIST="Sega - Mega-CD - Sega CD.lpl"
+      LIBRETRO="app0:/picodrive_libretro.self"
+      LIBNAME="Picodrive"
+      ;;
+    lynx)
+      EXTENSION=".lnx"
+      PLAYLIST="Atari - Lynx.lpl"
+      LIBRETRO="app0:/handy_libretro.self"
+      LIBNAME="Handy"
+      ;;
+    nes)
+      EXTENSION=".nes"
+      PLAYLIST="Nintendo - Nintendo Entertainment System.lpl"
+      LIBRETRO="app0:/nestopia_libretro.self"
+      LIBNAME="Nestopia"
+      ;;
+    neocd)
+      EXTENSION=".cue"
+      PLAYLIST="SNK - Neo Geo CD.lpl"
+      LIBRETRO="app0:fbneo_libretro.self --subsystem neocd"
+      LIBNAME="FBNeo"
+      ;;
+    ngp)
+      EXTENSION=".ngp"
+      PLAYLIST="SNK - Neo Geo Pocket.lpl"
+      LIBRETRO="app0:/mednafen_ngp_libretro.self"
+      LIBNAME="Mednafen NeoPop"
+      ;;
+    ngpc)
+      EXTENSION=".ngc"
+      PLAYLIST="SNK - Neo Geo Pocket Color.lpl"
+      LIBRETRO="app0:/mednafen_ngp_libretro.self"
+      LIBNAME="Mednafen NeoPop"
+      ;;
+    pce)
+      EXTENSION=".pce"
+      PLAYLIST="NEC - PC Engine - TurboGrafx 16.lpl"
+      LIBRETRO="app0:/mednafen_pce_fast_libretro.self"
+      LIBNAME="Mednafen PCE Fast"
+      ;;
+    pcecd)
+      EXTENSION=".cue"
+      PLAYLIST="NEC - PC Engine CD - TurboGrafx-CD.lpl"
+      LIBRETRO="app0:/mednafen_pce_fast_libretro.self"
+      LIBNAME="Mednafen PCE Fast"
+      ;;
+    ps1)
+      EXTENSION=".cue"
+      PLAYLIST="Sony - PlayStation.lpl"
+      LIBRETRO="app0:/pcsx_rearmed_libretro.self"
+      LIBNAME="PCSX ReArmed"
+      ;;
+    sg1000)
+      EXTENSION=".sg"
+      PLAYLIST="Sega - SG-1000.lpl"
+      LIBRETRO="app0:/genesis_plus_gx_libretro.self"
+      LIBNAME="Genesis Plus GX"
+      ;;
+    sms)
+      EXTENSION=".sms"
+      PLAYLIST="Sega - Master System - Mark III.lpl"
+      LIBRETRO="app0:/genesis_plus_gx_libretro.self"
+      LIBNAME="Genesis Plus GX"
+      ;;
+    snes)
+      EXTENSION=".sfc"
+      PLAYLIST="Nintendo - Super Nintendo Entertainment System.lpl"
+      LIBRETRO="app0:/snes9x2005_libretro.self"
+      LIBNAME="Snes9x 2005"
+      ;;
+    ws)
+      EXTENSION=".ws"
+      PLAYLIST="Bandai - Wonderswan.lpl"
+      LIBRETRO="app0:/mednafen_wswan_libretro.self"
+      LIBNAME="Mednafen WonderSwan"
+      ;;
+    wsc)
+      EXTENSION=".wsc"
+      PLAYLIST="Bandai - Wonderswan Color.lpl"
+      LIBRETRO="app0:/mednafen_wswan_libretro.self"
+      LIBNAME="Mednafen WonderSwan"
+      ;;
+    *)
+      PLAYLIST=""
+      echo "Hardware $CONSOLE is not supported."
+      ;;
+  esac
+
+  _init_lpl "$PLAYLIST"
+
   for GAMENAME in $GAMELIST
   do
-  SKIP=0
-    case $CONSOLE in
-      fba|neogeo|cps[1-2])
-        PLAYLIST="FBNeo - Arcade Games.lpl"
-        LIBRETRO="app0:/fbneo_libretro.self"
-        LIBNAME="FBNeo"
-        _mame "$GAMENAME"
-        ;;
-      fds)
-        EXTENSION=".fds"
-        PLAYLIST="Nintendo - Family Computer Disk System.lpl"
-        LIBRETRO="app0:/nestopia_libretro.self"
-        LIBNAME="Nestopia"
-        _getname "$GAMENAME" "$EXTENSION"
-        ;;
-      gba)
-        EXTENSION=".gba"
-        PLAYLIST="Nintendo - Game Boy Advance.lpl"
-        LIBRETRO="app0:/gpsp_libretro.self"
-        LIBNAME="gpSP"
-        _getname "$GAMENAME" "$EXTENSION"
-        ;;
-      gb)
-        EXTENSION=".gb"
-        PLAYLIST="Nintendo - Game Boy.lpl"
-        LIBRETRO="app0:/gambatte_libretro.self"
-        LIBNAME="Gambatte"
-        _getname "$GAMENAME" "$EXTENSION"
-        ;;
-      gbc)
-        EXTENSION=".gbc"
-        PLAYLIST="Nintendo - Game Boy Color.lpl"
-        LIBRETRO="app0:/gambatte_libretro.self"
-        LIBNAME="Gambatte"
-        _getname "$GAMENAME" "$EXTENSION"
-        ;;
-      gg)
-        EXTENSION=".gg"
-        PLAYLIST="Sega - Game Gear.lpl"
-        LIBRETRO="app0:/genesis_plus_gx_libretro.self"
-        LIBNAME="Genesis Plus GX"
-        _getname "$GAMENAME" "$EXTENSION"
-        ;;
-      md)
-        EXTENSION=".md"
-        PLAYLIST="Sega - Mega Drive - Genesis.lpl"
-        LIBRETRO="app0:/genesis_plus_gx_libretro.self"
-        LIBNAME="Genesis Plus GX"
-        _getname "$GAMENAME" "$EXTENSION"
-        ;;
-      mame2003)
-        PLAYLIST="MAME.lpl"
-        LIBRETRO="app0:/mame2003_libretro.self"
-        LIBNAME="MAME 2003"
-        _mame "$GAMENAME"
-        ;;
-      megacd)
-        EXTENSION=".cue"
-        PLAYLIST="Sega - Mega-CD - Sega CD.lpl"
-        LIBRETRO="app0:/picodrive_libretro.self"
-        LIBNAME="Picodrive"
-        _getname "$GAMENAME" "$EXTENSION"
-        ;;
-      lynx)
-        EXTENSION=".lnx"
-        PLAYLIST="Atari - Lynx.lpl"
-        LIBRETRO="app0:/handy_libretro.self"
-        LIBNAME="Handy"
-        _getname "$GAMENAME" "$EXTENSION"
-        ;;
-      nes)
-        EXTENSION=".nes"
-        PLAYLIST="Nintendo - Nintendo Entertainment System.lpl"
-        LIBRETRO="app0:/nestopia_libretro.self"
-        LIBNAME="Nestopia"
-        _getname "$GAMENAME" "$EXTENSION"
-        ;;
-      neocd)
-        EXTENSION=".cue"
-        PLAYLIST="SNK - Neo Geo CD.lpl"
-        LIBRETRO="app0:fbneo_libretro.self --subsystem neocd"
-        LIBNAME="FBNeo"
-        _getname "$GAMENAME" "$EXTENSION"
-        ;;
-      ngp)
-        EXTENSION=".ngp"
-        PLAYLIST="SNK - Neo Geo Pocket.lpl"
-        LIBRETRO="app0:/mednafen_ngp_libretro.self"
-        LIBNAME="Mednafen NeoPop"
-        _getname "$GAMENAME" "$EXTENSION"
-        ;;
-      ngpc)
-        EXTENSION=".ngc"
-        PLAYLIST="SNK - Neo Geo Pocket Color.lpl"
-        LIBRETRO="app0:/mednafen_ngp_libretro.self"
-        LIBNAME="Mednafen NeoPop"
-        _getname "$GAMENAME" "$EXTENSION"
-        ;;
-      pce)
-        EXTENSION=".pce"
-        PLAYLIST="NEC - PC Engine - TurboGrafx 16.lpl"
-        LIBRETRO="app0:/mednafen_pce_fast_libretro.self"
-        LIBNAME="Mednafen PCE Fast"
-        _getname "$GAMENAME" "$EXTENSION"
-        ;;
-      pcecd)
-        EXTENSION=".cue"
-        PLAYLIST="NEC - PC Engine CD - TurboGrafx-CD.lpl"
-        LIBRETRO="app0:/mednafen_pce_fast_libretro.self"
-        LIBNAME="Mednafen PCE Fast"
-        _getname "$GAMENAME" "$EXTENSION"
-        ;;
-      ps1)
-        EXTENSION=".cue"
-        PLAYLIST="Sony - PlayStation.lpl"
-        LIBRETRO="app0:/pcsx_rearmed_libretro.self"
-        LIBNAME="PCSX ReArmed"
-        _getname "$GAMENAME" "$EXTENSION"
-        ;;
-      sg1000)
-        EXTENSION=".sg"
-        PLAYLIST="Sega - SG-1000.lpl"
-        LIBRETRO="app0:/genesis_plus_gx_libretro.self"
-        LIBNAME="Genesis Plus GX"
-        _getname "$GAMENAME" "$EXTENSION"
-        ;;
-      sms)
-        EXTENSION=".sms"
-        PLAYLIST="Sega - Master System - Mark III.lpl"
-        LIBRETRO="app0:/genesis_plus_gx_libretro.self"
-        LIBNAME="Genesis Plus GX"
-        _getname "$GAMENAME" "$EXTENSION"
-        ;;
-      snes)
-        EXTENSION=".sfc"
-        PLAYLIST="Nintendo - Super Nintendo Entertainment System.lpl"
-        LIBRETRO="app0:/snes9x2005_libretro.self"
-        LIBNAME="Snes9x 2005"
-        _getname "$GAMENAME" "$EXTENSION"
-        ;;
-      ws)
-        EXTENSION=".ws"
-        PLAYLIST="Bandai - Wonderswan.lpl"
-        LIBRETRO="app0:/mednafen_wswan_libretro.self"
-        LIBNAME="Mednafen WonderSwan"
-        _getname "$GAMENAME" "$EXTENSION"
-        ;;
-      wsc)
-        EXTENSION=".wsc"
-        PLAYLIST="Bandai - Wonderswan Color.lpl"
-        LIBRETRO="app0:/mednafen_wswan_libretro.self"
-        LIBNAME="Mednafen WonderSwan"
-        _getname "$GAMENAME" "$EXTENSION"
-        ;;
-      *)
-        PLAYLIST=""
-        echo "Hardware $CONSOLE is not supported."
-        ;;
-    esac
+    SKIP=0
 
-  if [[ ! -z $PLAYLIST ]]
-  then
-    if [[ $SKIP -eq 0 ]]
+    _getname "$GAMENAME" "$EXTENSION" "$CONSOLE"
+
+    if [[ ! -z $PLAYLIST ]]
     then
-      FULLPATH=$(echo $ROMPATH/$CONSOLE/$GAMENAME | tr '_' ' ')
-      CRC32="00000000"
-      echo "$FULLPATH" >> "$PLAYLIST"
-      echo "$FULLNAME" >> "$PLAYLIST"
-      echo "$LIBRETRO" >> "$PLAYLIST"
-      echo "$LIBNAME" >> "$PLAYLIST"
-      echo "$CRC32|crc" >> "$PLAYLIST"
-      echo "$PLAYLIST" >> "$PLAYLIST"
-      echo -n .
+      if [[ $SKIP -eq 0 ]]
+      then
+        FULLPATH=$(echo $ROMPATH/$CONSOLE/$GAMENAME | tr '_' ' ')
+        CRC32="00000000"
+        _add_game_to_json "$FULLPATH" "$FULLNAME" "$LIBRETRO" "$LIBNAME" "$CRC32" "$PLAYLIST"
+        echo -n .
+      fi
     fi
-  fi
 
   done
+
+  _close_lpl "$PLAYLIST"
+
 echo
 done
 
 echo -n "Uploading playlists to Vita... "
-lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$RETROPATH/playlists ; mput *.lpl" > /dev/null
+# lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$RETROPATH/playlists ; mput *.lpl" > /dev/null
 echo "done"
 
 exit 0
