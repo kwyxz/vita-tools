@@ -7,7 +7,7 @@ rm -f *.lpl
 echo "done."
 
 echo -n "Cleaning up remote directory on Vita... "
-# lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$RETROPATH ; mrm -f playlists/*" > /dev/null
+lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$RETROPATH ; mrm -f playlists/*" > /dev/null
 echo "done."
 
 CONSOLELIST=$(lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$ROMPATH ; cls -1 " | tr -d $'\r' | sed -e 's/\/$//')
@@ -53,7 +53,7 @@ _getname ()
 
 _init_lpl ()
 {
-  echo -e "{\n  \"version\": \"1.0\",\n  \"items\": [" > "$1"
+  echo -e "{\n  \"version\": \"1.2\",\n  \"default_core_path\": \"$2\",\n  \"default_core_name\": \"$3\",\n  \"items\": [" > "$1"
 }
 
 _add_game_to_json ()
@@ -143,7 +143,7 @@ do
     neocd)
       EXTENSION=".cue"
       PLAYLIST="SNK - Neo Geo CD.lpl"
-      LIBRETRO="app0:fbneo_libretro.self --subsystem neocd"
+      LIBRETRO="app0:fbneo_libretro.self"
       LIBNAME="FBNeo"
       ;;
     ngp)
@@ -212,7 +212,7 @@ do
       ;;
   esac
 
-  _init_lpl "$PLAYLIST"
+  _init_lpl "$PLAYLIST" "$LIBRETRO" "$LIBNAME"
 
   for GAMENAME in $GAMELIST
   do
@@ -239,7 +239,7 @@ echo
 done
 
 echo -n "Uploading playlists to Vita... "
-# lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$RETROPATH/playlists ; mput *.lpl" > /dev/null
+lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$RETROPATH/playlists ; mput *.lpl" > /dev/null
 echo "done"
 
 exit 0
