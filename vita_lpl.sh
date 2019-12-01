@@ -19,7 +19,8 @@ _mame ()
   if [[ ! -z "$FULLNAME" ]]; then
     echo -n .
   else
-    PLAYLIST=""
+    echo "Game $1 was skipped!"
+    SKIP=1
   fi
 }
 
@@ -27,13 +28,7 @@ _getname ()
 {
   case $3 in
     fbneo|neogeo|cps[12]|mame2003)
-      MAMEGAME=$(basename $1 .zip)
-      FULLNAME=$($MAMEBIN -listfull "$MAMEGAME" | grep -v Description | cut -d '"' -f 2 | tr '/' '_' | sed 's/\ \~\ /\)\(/')
-      if [[ ! -z "$FULLNAME" ]]; then
-        echo -n .
-      else
-        PLAYLIST=""
-      fi
+      _mame "$1"
       ;;
     *)
       if $(echo "$1" | grep -q "$2"); then
@@ -220,7 +215,7 @@ do
 
     _getname "$GAMENAME" "$EXTENSION" "$CONSOLE"
 
-    if [[ ! -z $PLAYLIST ]]
+    if [[ ! -z "$PLAYLIST" ]]
     then
       if [[ $SKIP -eq 0 ]]
       then
@@ -234,8 +229,8 @@ do
   done
 
   _close_lpl "$PLAYLIST"
+  echo
 
-echo
 done
 
 echo -n "Uploading playlists to Vita... "
