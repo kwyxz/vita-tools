@@ -32,6 +32,21 @@ _getname ()
         simpsons|ssriders|tmnt|tmnt2|xmen)
           SKIP=1
           ;;
+        simpsn2p)
+          _mame simpsons
+          ;;
+        ssrdrubc)
+          _mame ssriders
+          ;;
+        tmht2p)
+          _mame tmnt
+          ;;
+        tmnt22p)
+          _mame tmnt2
+          ;;
+        xmen2p)
+          _mame xmen
+          ;;
         *)
           _mame "$1"
           ;;
