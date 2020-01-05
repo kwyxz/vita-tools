@@ -28,7 +28,14 @@ _getname ()
 {
   case $3 in
     fbneo|neogeo|cps[12]|mame2003)
-      _mame "$1"
+      case "$1" in
+        simpsons|ssriders|tmnt|tmnt2|xmen)
+          SKIP=1
+          ;;
+        *)
+          _mame "$1"
+          ;;
+      esac
       ;;
     *)
       if $(echo "$1" | grep -q "$2"); then

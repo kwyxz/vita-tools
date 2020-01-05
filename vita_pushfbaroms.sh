@@ -42,7 +42,31 @@ do
         elif [ -f $MAME2k3ROMDIR/$GAME.zip ]
         then
           cd $MAME2k3ROMDIR/
-          push_game mame2003 $GAME.zip
+          case $GAME in
+            simpsons)
+              push_game mame2003 simpsons.zip
+              push_game mame2003 simpsn2p.zip
+              ;;
+            ssriders)
+              push_game mame2003 ssriders.zip
+              push_game mame2003 ssrdrubc.zip
+              ;;
+            tmnt)
+              push_game mame2003 tmnt.zip
+              push_game mame2003 tmht2p.zip
+              ;;
+            tmnt2)
+              push_game mame2003 tmnt2.zip
+              push_game mame2003 tmnt22p.zip
+              ;;
+            xmen)
+              push_game mame2003 xmen.zip
+              push_game mame2003 xmen2p.zip
+              ;;
+            *)
+              push_game mame2003 $GAME.zip
+              ;;
+          esac
         elif [ -f $FBAROMDIR/$GAME.zip ]
         then
           cd $FBAROMDIR/
