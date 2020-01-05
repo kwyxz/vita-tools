@@ -35,18 +35,18 @@ do
       CLONES=$($MAMEBIN -listclones | awk '{print $1}' | sort | uniq)
       if ! echo $CLONES | grep -q -w $GAME
       then
-        if [ "$DRIVERNAME" = "neogeo" ] || [ "$DRIVERNAME" = "cps2" ] || [ "$DRIVERNAME" = "cps3" ]
+        if [ "$DRIVERNAME" = "cps2" ]
         then
           cd $FBAROMDIR/
-          push_game fba $GAME.zip
-        elif [ -f $FBAROMDIR/$GAME.zip ]
-        then
-          cd $FBAROMDIR/
-          push_game fba $GAME.zip
+          push_game cps2 $GAME.zip
         elif [ -f $MAME2k3ROMDIR/$GAME.zip ]
         then
           cd $MAME2k3ROMDIR/
           push_game mame2003 $GAME.zip
+        elif [ -f $FBAROMDIR/$GAME.zip ]
+        then
+          cd $FBAROMDIR/
+          push_game fbneo $GAME.zip
         fi
       fi
       done <<< $DRIVERGAMES

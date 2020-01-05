@@ -70,7 +70,12 @@ do
   FULLNAME=""
 
   case $CONSOLE in
-    fbneo|neogeo|cps[1-2])
+    cps2)
+      PLAYLIST="Arcade (FB Alpha 2012 CPS-2).lpl"
+      LIBRETRO="app0:/fbalpha2012_cps2_libretro.self"
+      LIBNAME="FB Alpha 2012 CPS-2"
+      ;;
+    fbneo|neogeo)
       PLAYLIST="FBNeo - Arcade Games.lpl"
       LIBRETRO="app0:/fbneo_libretro.self"
       LIBNAME="FBNeo"
