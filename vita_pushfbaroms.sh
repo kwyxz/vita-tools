@@ -3,7 +3,7 @@
 . ./settings
 
 MAME2k3ROMDIR=$GAMESDIR/mame2003/
-FBAROMDIR=$GAMESDIR/fba/
+FBAROMDIR=$GAMESDIR/fbneo/
 
 if [ $# -lt 1 ]
   then
