@@ -35,43 +35,51 @@ do
       CLONES=$($MAMEBIN -listclones | awk '{print $1}' | sort | uniq)
       if ! echo $CLONES | grep -q -w $GAME
       then
-        if [ "$DRIVERNAME" = "cps2" ] || [ "$DRIVERNAME" = "neogeo" ]
-        then
-          cd $FBAROMDIR/
-          push_game $DRIVERNAME $GAME.zip
-        elif [ -f $MAME2k3ROMDIR/$GAME.zip ]
-        then
-          cd $MAME2k3ROMDIR/
-          case $GAME in
-            simpsons)
-              push_game mame2003 simpsons.zip
-              push_game mame2003 simpsn2p.zip
-              ;;
-            ssriders)
-              push_game mame2003 ssriders.zip
-              push_game mame2003 ssrdrubc.zip
-              ;;
-            tmnt)
-              push_game mame2003 tmnt.zip
-              push_game mame2003 tmht2p.zip
-              ;;
-            tmnt2)
-              push_game mame2003 tmnt2.zip
-              push_game mame2003 tmnt22p.zip
-              ;;
-            xmen)
-              push_game mame2003 xmen.zip
-              push_game mame2003 xmen2p.zip
-              ;;
-            *)
+        case "$DRIVERNAME" in
+          cps2|neogeo)
+            cd $FBAROMDIR/
+            push_game $DRIVERNAME $GAME.zip
+            ;;
+          dec0)
+            cd $MAME2k3ROMDIR/
+            push_game mame2003 $GAME.zip
+            ;;
+          *)
+            if [ -f $FBAROMDIR/$GAME.zip ]
+            then
+              cd $FBAROMDIR/
+              case $GAME in
+                simpsons)
+                  push_game fbneo simpsons.zip
+                  push_game fbneo simpsons2p.zip
+                  ;;
+                ssriders)
+                  push_game fbneo ssriders.zip
+                  push_game fbneo ssridersubc.zip
+                  ;;
+                tmnt)
+                  push_game fbneo tmnt.zip
+                  push_game fbneo tmht2p.zip
+                  ;;
+                tmnt2)
+                  push_game fbneo tmnt2.zip
+                  push_game fbneo tmnt22pu.zip
+                  ;;
+                xmen)
+                  push_game fbneo xmen.zip
+                  push_game fbneo xmen2pu.zip
+                  ;;
+                *)
+                  push_game fbneo $GAME.zip
+                  ;;
+              esac
+            elif [ -f $MAME2k3ROMDIR/$GAME.zip ]
+            then
+              cd $MAME2k3ROMDIR/
               push_game mame2003 $GAME.zip
-              ;;
-          esac
-        elif [ -f $FBAROMDIR/$GAME.zip ]
-        then
-          cd $FBAROMDIR/
-          push_game fbneo $GAME.zip
-        fi
+            fi
+            ;;
+        esac
       fi
       done <<< $DRIVERGAMES
   fi

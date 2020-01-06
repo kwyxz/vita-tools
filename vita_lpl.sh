@@ -29,23 +29,23 @@ _getname ()
   case $3 in
     fbneo|neogeo|cps[12]|mame2003)
       case "$1" in
-        simpsons|ssriders|tmnt|tmnt2|xmen)
+        simpsons.zip|ssriders.zip|tmnt.zip|tmnt2.zip|xmen.zip)
           SKIP=1
           ;;
-        simpsn2p)
-          _mame simpsons
+        simpsons2p.zip|simpsn2p.zip)
+          _mame simpsons.zip
           ;;
-        ssrdrubc)
-          _mame ssriders
+        ssriderusbc.zip|ssrdrubc.zip)
+          _mame ssriders.zip
           ;;
-        tmht2p)
-          _mame tmnt
+        tmht2p.zip)
+          _mame tmnt.zip
           ;;
-        tmnt22p)
-          _mame tmnt2
+        tmnt22pu.zip|tmnt22p.zip)
+          _mame tmnt2.zip
           ;;
-        xmen2p)
-          _mame xmen
+        xmen2pu.zip|xmen2p.zip)
+          _mame xmen.zip
           ;;
         *)
           _mame "$1"
@@ -93,11 +93,11 @@ do
 
   case $CONSOLE in
     cps2)
-      PLAYLIST="Arcade (FB Alpha 2012 CPS-2).lpl"
+      PLAYLIST="Capcom - CP System II.lpl"
       LIBRETRO="app0:/fbalpha2012_cps2_libretro.self"
       LIBNAME="FB Alpha 2012 CPS-2"
       ;;
-    fbneo|neogeo)
+    fbneo)
       PLAYLIST="FBNeo - Arcade Games.lpl"
       LIBRETRO="app0:/fbneo_libretro.self"
       LIBNAME="FBNeo"
@@ -165,8 +165,13 @@ do
     neocd)
       EXTENSION=".cue"
       PLAYLIST="SNK - Neo Geo CD.lpl"
-      LIBRETRO="app0:fbneo_libretro.self"
+      LIBRETRO="app0:/fbneo_libretro.self"
       LIBNAME="FBNeo"
+      ;;
+    neogeo)
+      PLAYLIST="SNK - Neo Geo.lpl"
+      LIBRETRO="app0:/fbalpha2012_neogeo_libretro.self"
+      LIBNAME="FB Alpha 2012 Neo Geo"
       ;;
     ngp)
       EXTENSION=".ngp"
