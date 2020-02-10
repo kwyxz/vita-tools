@@ -80,6 +80,7 @@ _add_game_to_json ()
 
 _close_lpl ()
 {
+  sed -i '$ s/,//' "$1"
   echo -e "  ]\n}" >> "$1"
 }
 
