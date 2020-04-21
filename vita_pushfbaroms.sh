@@ -7,7 +7,7 @@ FBAROMDIR=$GAMESDIR/fbneo/
 
 if [ $# -lt 1 ]
   then
-    echo "Usage: $0 <MAME driver>" 
+    echo "Usage: $0 <MAME driver>"
     exit 1
 fi
 
@@ -21,7 +21,7 @@ push_game () {
 while [ $# -ne 0 ]
 do
   GAMES=$($MAMEBIN -listfull | awk '{print $1}' | sort | uniq)
-  if ! echo $GAMES | grep -q -w $1  
+  if ! echo $GAMES | grep -q -w $1
   then
     $MAMEBIN -listfull $1
   else
