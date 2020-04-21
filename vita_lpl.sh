@@ -164,10 +164,10 @@ do
       LIBNAME="Nestopia"
       ;;
     neocd)
-      EXTENSION=".cue"
+      EXTENSION=".chd"
       PLAYLIST="SNK - Neo Geo CD.lpl"
-      LIBRETRO="app0:/fbneo_libretro.self"
-      LIBNAME="FBNeo"
+      LIBRETRO="app0:/neocd_libretro.self"
+      LIBNAME="NeoCD"
       ;;
     neogeo)
       PLAYLIST="SNK - Neo Geo.lpl"
@@ -193,7 +193,7 @@ do
       LIBNAME="Mednafen PCE Fast"
       ;;
     pcecd)
-      EXTENSION=".cue"
+      EXTENSION=".chd"
       PLAYLIST="NEC - PC Engine CD - TurboGrafx-CD.lpl"
       LIBRETRO="app0:/mednafen_pce_fast_libretro.self"
       LIBNAME="Mednafen PCE Fast"
