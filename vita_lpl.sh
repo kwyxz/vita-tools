@@ -54,14 +54,17 @@ _getname ()
       ;;
     *)
       if $(echo "$1" | grep -q "$2"); then
-        GAME=$(echo "$1" | tr '_' ' ' | tr -d '[!]')
+        GAME=$(echo "$1" | tr '_' ' ' | sed -e "s/\[\!\]//")
         if $(echo "$GAME" | grep -q \.zip); then
           FULLNAME=$(basename "$GAME" "$2.zip")
+        elif $(echo "$GAME" | grep -q \.7z); then
+          FULLNAME=$(basename "$GAME" "$2.7z")
         else
           FULLNAME=$(basename "$GAME" "$2")
         fi
       else
-        echo "$1" has an unrecognized extension, skipping
+        echo
+        echo -n -e "\033[0;31m$1\033[0m" has an unrecognized extension, skipping
         SKIP=1
       fi
       ;;
