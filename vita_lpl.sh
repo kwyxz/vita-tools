@@ -146,7 +146,7 @@ do
       LIBNAME="MAME 2003"
       ;;
     megacd)
-      EXTENSION=".cue"
+      EXTENSION=".chd"
       PLAYLIST="Sega - Mega-CD - Sega CD.lpl"
       LIBRETRO="app0:/picodrive_libretro.self"
       LIBNAME="Picodrive"

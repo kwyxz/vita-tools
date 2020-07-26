@@ -15,4 +15,5 @@ MAMEBIN=/usr/local/games/mame/mame64
 
 # GCW network settings
 GCW_IP=192.168.1.27
-GCW_ROMDIR=/media/data/local/home/roms
+# GCW_ROMDIR=/media/data/local/home/roms
+GCW_ROMDIR=/media/sdcard

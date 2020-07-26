@@ -9,8 +9,8 @@ fi
 
 push_to_vita () {
   HW=$(echo $1 | rev | cut -d '/' -f1 | rev)
-  # rsync -e rsh --delete --progress -avz "$1/$2" "root@${GCW_IP}:${GCW_ROMDIR}/${HW}"
-  lftp -c "open -u anonymous,blah $GCW_IP ; cd $GCW_ROMDIR/$HW ; mput -c \"$1/$2\""
+  rsync -e rsh --delete --progress -vr "$1/$2" "root@${GCW_IP}:${GCW_ROMDIR}/${HW}"
+  # lftp -c "open -u anonymous,blah $GCW_IP ; cd $GCW_ROMDIR/$HW ; mput -c \"$1/$2\""
 }
 
 check_country () {
