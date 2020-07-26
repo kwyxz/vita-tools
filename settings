@@ -6,7 +6,7 @@ VITA_PORT=1337
 
 # Remote paths
 HOMEBREWPATH=ux0:/homebrew
-ROMPATH=$HOMEBREWPATH/roms
+VITA_ROMDIR=$HOMEBREWPATH/roms
 RETROPATH=ux0:/data/retroarch
 
 # Local paths

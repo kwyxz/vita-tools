@@ -7,7 +7,7 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 
-push_to_vita () {
+push_to_gcw () {
   HW=$(echo $1 | rev | cut -d '/' -f1 | rev)
   rsync -e rsh --delete --progress -vr "$1/$2" "root@${GCW_IP}:${GCW_ROMDIR}/${HW}"
   # lftp -c "open -u anonymous,blah $GCW_IP ; cd $GCW_ROMDIR/$HW ; mput -c \"$1/$2\""
@@ -23,7 +23,7 @@ check_country () {
       "Europe") check_country "$1" "$2" "World" ;;
       "World") check_country "$1" "$2" "Japan" ;;
       esac ;;
-   *) push_to_vita "$1" "$GAMENAME" ;;
+   *) push_to_gcw "$1" "$GAMENAME" ;;
   esac
 }
 
