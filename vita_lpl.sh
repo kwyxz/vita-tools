@@ -10,11 +10,11 @@ echo -n "Cleaning up remote directory on Vita... "
 lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$RETROPATH ; mrm -f playlists/*" > /dev/null
 echo "done."
 
-CONSOLELIST=$(lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$ROMPATH ; cls -1 " | tr -d $'\r' | sed -e 's/\/$//')
+CONSOLELIST=$(lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$VITA_ROMPATH ; cls -1 " | tr -d $'\r' | sed -e 's/\/$//')
 
 _mame ()
 {
-  MAMEGAME=$(basename $1 .zip)
+  MAMEGAME=$(basename $1 .7z)
   FULLNAME=$($MAMEBIN -listfull "$MAMEGAME" | grep -v Description | cut -d '"' -f 2 | tr '/' '_' | sed 's/\ \~\ /\)\(/')
   if [[ ! -z "$FULLNAME" ]]; then
     echo -n .
@@ -29,28 +29,47 @@ _getname ()
   case $3 in
     fbneo|neogeo|cps[12]|mame2003)
       case "$1" in
-        simpsons.zip|ssriders.zip|tmnt.zip|tmnt2.zip|xmen.zip)
+        simpsons.7z|ssriders.7z|tmnt.7z|tmnt2.7z|xmen.7z)
           SKIP=1
           ;;
-        simpsons2p.zip|simpsn2p.zip)
-          _mame simpsons.zip
+        simpsons2p.7z|simpsn2p.7z)
+          _mame simpsons.7z
           ;;
-        ssriderusbc.zip|ssrdrubc.zip)
-          _mame ssriders.zip
+        ssriderusbc.7z|ssrdrubc.7z)
+          _mame ssriders.7z
           ;;
-        tmht2p.zip)
-          _mame tmnt.zip
+        tmht2p.7z)
+          _mame tmnt.7z
           ;;
-        tmnt22pu.zip|tmnt22p.zip)
-          _mame tmnt2.zip
+        tmnt22pu.7z|tmnt22p.7z)
+          _mame tmnt2.7z
           ;;
-        xmen2pu.zip|xmen2p.zip)
-          _mame xmen.zip
+        xmen2pu.7z|xmen2p.7z)
+          _mame xmen.7z
           ;;
         *)
           _mame "$1"
           ;;
       esac
+      ;;
+    sms)
+      if $(echo "$1" | grep -q .sms); then
+        EXTENSION=".sms"
+        GAME=$(echo "$1" | tr '_' ' ' | tr -d '[!]')
+        FULLNAME=$(basename "$GAME" "$EXTENSION")
+      elif $(echo "$1" | grep -q .sc); then
+        EXTENSION=".sg"
+        GAME=$(echo "$1" | tr '_' ' ' | tr -d '[!]')
+        FULLNAME=$(basename "$GAME" "$EXTENSION")
+      elif $(echo "$1" | grep -q .sg); then
+        EXTENSION=".sg"
+        GAME=$(echo "$1" | tr '_' ' ' | tr -d '[!]')
+        FULLNAME=$(basename "$GAME" "$EXTENSION")
+      else
+        echo
+        echo -n -e "\033[0;31m$1\033[0m" has an unrecognized extension, skipping
+        SKIP=1
+      fi
       ;;
     *)
       if $(echo "$1" | grep -q "$2"); then
@@ -91,7 +110,7 @@ for CONSOLE in $CONSOLELIST
 do
   echo Generating playlist for : $CONSOLE
 
-  COMMAND="open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$ROMPATH/$CONSOLE/ ; cls -1 "
+  COMMAND="open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$VITA_ROMPATH/$CONSOLE/ ; cls -1 "
   GAMELIST=$(lftp -c "$COMMAND" | tr ' ' '_' | tr -d $'\r')
   FULLNAME=""
 
@@ -143,16 +162,15 @@ do
       LIBNAME="Genesis Plus GX"
       ;;
     mame2003)
-      EXTENSION=".zip"
       PLAYLIST="MAME.lpl"
-      LIBRETRO="app0:/mame2003_libretro.self"
-      LIBNAME="MAME 2003"
+      LIBRETRO="app0:/mame2003_plus_libretro.self"
+      LIBNAME="MAME 2003 Plus"
       ;;
     megacd)
       EXTENSION=".chd"
       PLAYLIST="Sega - Mega-CD - Sega CD.lpl"
-      LIBRETRO="app0:/picodrive_libretro.self"
-      LIBNAME="Picodrive"
+      LIBRETRO="app0:/genesis_plus_gx_libretro.self"
+      LIBNAME="Genesis Plus GX"
       ;;
     lynx)
       EXTENSION=".lnx"
@@ -255,7 +273,7 @@ do
     then
       if [[ $SKIP -eq 0 ]]
       then
-        FULLPATH=$(echo $ROMPATH/$CONSOLE/$GAMENAME | tr '_' ' ')
+        FULLPATH=$(echo $VITA_ROMPATH/$CONSOLE/$GAMENAME | tr '_' ' ')
         CRC32="00000000"
         _add_game_to_json "$FULLPATH" "$FULLNAME" "$LIBRETRO" "$LIBNAME" "$CRC32" "$PLAYLIST"
         echo -n .

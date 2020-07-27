@@ -126,19 +126,20 @@ select_emu() {
 # handle driver-specific cases
 select_driver() {
   case "$2" in
-    cps[23]|neogeo|raiden2|segas16b|toaplan2)
-      # FBNeo mandatory with Pi 4 but better perfs with less overheating
+    cps2)
+      # CPS2 separate folder
       cd ${FBNEOROMDIR}
-      push_emu fbneo "$1"
+      push_emu cps2 "$1"
       ;;
-    # cps3)
-    #   # CPS3 games must be handled separately to deal with NoCD roms
-    #   push_cps3_game "$1"
-    #   ;;
     dec0)
       # issues with Final Burn, forcing MAME here
       cd ${MAME2k3ROMDIR}
       push_emu mame2003 "$1"
+      ;;
+    neogeo)
+      # Neo Geo separate folder
+      cd ${FBNEOROMDIR}
+      push_emu neogeo "$1"
       ;;
     segas32)
       case "$1" in

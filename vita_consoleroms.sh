@@ -7,9 +7,22 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 
+check_revision () {
+  BASENAME=$(basename "${2}" .sfc.7z)
+  if [[ -f "${BASENAME} (Rev 3).sfc.7z" ]]; then
+    push_to_vita "$1" "${BASENAME} (Rev 3).sfc.7z"
+  elif [[ -f "${BASENAME} (Rev 2).sfc.7z" ]]; then
+    push_to_vita "$1" "${BASENAME} (Rev 2).sfc.7z"
+  elif [[ -f "${BASENAME} (Rev 1).sfc.7z" ]]; then
+    push_to_vita "$1" "${BASENAME} (Rev 1).sfc.7z"
+  else
+    push_to_vita "$1" "${2}"
+  fi
+}
+
 push_to_vita () {
   HW=$(echo $1 | rev | cut -d '/' -f1 | rev)
-  lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd ${VITA_ROMDIR}/${HW} ; mput -c \"$1/$2\""
+  lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd ${VITA_ROMPATH}/${HW} ; mput -c \"$1/${2}\""
 }
 
 check_country () {
@@ -22,7 +35,7 @@ check_country () {
       "Europe") check_country "$1" "$2" "World" ;;
       "World") check_country "$1" "$2" "Japan" ;;
       esac ;;
-   *) push_to_vita "$1" "$GAMENAME" ;;
+   *) check_revision "$1" "$GAMENAME" ;;
   esac
 }
 
