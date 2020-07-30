@@ -15,7 +15,7 @@ CONSOLELIST=$(lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$VITA_RO
 _mame ()
 {
   MAMEGAME=$(basename $1 .7z)
-  FULLNAME=$($MAMEBIN -listfull "$MAMEGAME" | grep -v Description | cut -d '"' -f 2 | tr '/' '_' | sed 's/\ \~\ /\)\(/')
+  FULLNAME=$($MAMEBIN -listfull "$MAMEGAME" | grep -v Description | cut -d '"' -f 2 | tr '/' '_' | sed 's/\ \~\ /\)\(/' | sed 's/) (/, /g')
   if [[ ! -z "$FULLNAME" ]]; then
     echo -n .
   else
