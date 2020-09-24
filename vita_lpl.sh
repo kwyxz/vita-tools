@@ -71,6 +71,21 @@ _getname ()
         SKIP=1
       fi
       ;;
+    gg)
+      if $(echo "$1" | grep -q .sms); then
+        EXTENSION=".sms"
+        GAME=$(echo "$1" | tr '_' ' ' | tr -d '[!]')
+        FULLNAME=$(basename "$GAME" "$EXTENSION")
+      elif $(echo "$1" | grep -q .gg); then
+        EXTENSION=".gg"
+        GAME=$(echo "$1" | tr '_' ' ' | tr -d '[!]')
+        FULLNAME=$(basename "$GAME" "$EXTENSION")
+      else
+        echo
+        echo -n -e "\033[0;31m$1\033[0m" has an unrecognized extension, skipping
+        SKIP=1
+      fi
+      ;;
     *)
       if $(echo "$1" | grep -q "$2"); then
         GAME=$(echo "$1" | tr '_' ' ' | sed -e "s/\[\!\]//")
@@ -152,8 +167,8 @@ do
     gg)
       EXTENSION=".gg"
       PLAYLIST="Sega - Game Gear.lpl"
-      LIBRETRO="app0:/genesis_plus_gx_libretro.self"
-      LIBNAME="Genesis Plus GX"
+      LIBRETRO="app0:/sms_plus_gx_libretro.self"
+      LIBNAME="SMS Plus GX"
       ;;
     md)
       EXTENSION=".md"
@@ -231,17 +246,23 @@ do
       LIBRETRO="app0:/genesis_plus_gx_libretro.self"
       LIBNAME="Genesis Plus GX"
       ;;
+    sgx)
+      EXTENSION=".pce"
+      PLAYLIST="NEC - PC Engine SuperGrafx.lpl"
+      LIBRETRO="app0:/mednafen_supergrafx_libretro.self"
+      LIBNAME="Mednafen SuperGrafx"
+      ;;
     sms)
       EXTENSION=".sms"
       PLAYLIST="Sega - Master System - Mark III.lpl"
-      LIBRETRO="app0:/genesis_plus_gx_libretro.self"
-      LIBNAME="Genesis Plus GX"
+      LIBRETRO="app0:/sms_plus_gx_libretro.self"
+      LIBNAME="SMS Plus GX"
       ;;
     snes)
       EXTENSION=".sfc"
       PLAYLIST="Nintendo - Super Nintendo Entertainment System.lpl"
-      LIBRETRO="app0:/snes9x2005_libretro.self"
-      LIBNAME="Snes9x 2005"
+      LIBRETRO="app0:/snes9x2005_plus_libretro.self"
+      LIBNAME="Snes9x 2005 Plus"
       ;;
     ws)
       EXTENSION=".ws"
