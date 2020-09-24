@@ -5,9 +5,9 @@ VITA_IP=192.168.1.12
 VITA_PORT=1337
 
 # Remote paths
-HOMEBREWPATH=ux0:/homebrew/
-VITA_ROMPATH=${HOMEBREWPATH}/roms/
-RETROPATH=ux0:/data/retroarch/
+HOMEBREWPATH=ux0:/homebrew
+VITA_ROMPATH=${HOMEBREWPATH}/roms
+RETROPATH=ux0:/data/retroarch
 
 # GCW network settings
 GCW_IP=192.168.1.27
