@@ -1,4 +1,4 @@
-These are the tools I use to manage RetroArch on my Vita.
+These are the tools I use to manage RetroArch on my Vita (and my GCW Zero).
 
 # settings
 
@@ -41,7 +41,7 @@ And finally, for Arcade game name scraping, MAMEBIN is the location of your MAME
 
 Every single one of these scripts requires the "lftp" FTP client to be installed.
 
-# vita_romupload.sh
+# vita_consoleroms.sh
 
 Takes one or several folder names then selects the most appropriate version of a ROM to push:
 
@@ -55,7 +55,7 @@ It then pushes the games to their respective folders on the Vita.
 The folders must exist on the Vita otherwise the FTP command will fail.
 For easy playlist generation, I recommend using the folder names described above.
 
-# vita_pushfbaroms.sh
+# vita_arcaderoms.sh
 
 This script will take a game name as an argument (following the MAME naming scheme) and will push every game running the same driver to the Vita. This is convenient for quickly pushing every CPS-1, Neo Geo, or Sega System 16 game at once. The script will prefer Final Burn whenever the game is supported for performance reasons. 
 
