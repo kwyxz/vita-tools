@@ -14,7 +14,7 @@ CONSOLELIST=$(lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd /$VITA_RO
 
 _mame ()
 {
-  MAMEGAME=$(basename $1 .7z)
+  MAMEGAME=$(basename $1 .zip)
   FULLNAME=$($MAMEBIN -listfull "$MAMEGAME" | grep -v Description | cut -d '"' -f 2 | tr '/' '_' | sed 's/\ \~\ /\)\(/' | sed 's/) (/, /g')
   if [[ ! -z "$FULLNAME" ]]; then
     echo -n .
@@ -29,23 +29,23 @@ _getname ()
   case $3 in
     fbneo|neogeo|cps[12]|mame2003)
       case "$1" in
-        simpsons.7z|ssriders.7z|tmnt.7z|tmnt2.7z|xmen.7z)
+        simpsons.zip|ssriders.zip|tmnt.zip|tmnt2.zip|xmen.zip)
           SKIP=1
           ;;
-        simpsons2p.7z|simpsn2p.7z)
-          _mame simpsons.7z
+        simpsons2p.zip|simpsn2p.zip)
+          _mame simpsons.zip
           ;;
-        ssriderusbc.7z|ssrdrubc.7z)
-          _mame ssriders.7z
+        ssriderusbc.zip|ssrdrubc.zip)
+          _mame ssriders.zip
           ;;
-        tmht2p.7z)
-          _mame tmnt.7z
+        tmht2p.zip)
+          _mame tmnt.zip
           ;;
-        tmnt22pu.7z|tmnt22p.7z)
-          _mame tmnt2.7z
+        tmnt22pu.zip|tmnt22p.zip)
+          _mame tmnt2.zip
           ;;
-        xmen2pu.7z|xmen2p.7z)
-          _mame xmen.7z
+        xmen2pu.zip|xmen2p.zip)
+          _mame xmen.zip
           ;;
         *)
           _mame "$1"
@@ -132,8 +132,8 @@ do
   case $CONSOLE in
     cps2)
       PLAYLIST="Capcom - CP System II.lpl"
-      LIBRETRO="app0:/fbalpha2012_cps2_libretro.self"
-      LIBNAME="FB Alpha 2012 CPS-2"
+      LIBRETRO="app0:/fbneo_libretro.self"
+      LIBNAME="FBNeo"
       ;;
     fbneo)
       PLAYLIST="FBNeo - Arcade Games.lpl"
@@ -207,8 +207,8 @@ do
       ;;
     neogeo)
       PLAYLIST="SNK - Neo Geo.lpl"
-      LIBRETRO="app0:/fbalpha2012_neogeo_libretro.self"
-      LIBNAME="FB Alpha 2012 Neo Geo"
+      LIBRETRO="app0:/fbneo_libretro.self"
+      LIBNAME="FBNeo"
       ;;
     ngp)
       EXTENSION=".ngp"

@@ -2,6 +2,10 @@
 
 . ./settings
 
+# which emu is the default
+DEFAULT=fbneo
+SECONDARY=mame2003
+
 # a few things to set beforehand
 SCRIPTPATH=$(pwd)
 # the location of the MAME 2003 fullset on the local host
@@ -12,6 +16,10 @@ FBNEOROMDIR=$GAMESDIR/fbneo/
 CLONES=$($MAMEBIN -listclones | awk '{print $1}' | sort | uniq)
 # the complete list of games, it saves time and RAM to just create a flat file
 $MAMEBIN -listfull | sort > ${SCRIPTPATH}/LISTFULL
+# a temporary location to rezip the ROM file
+TMPDIR=/tmp/
+# where is the rezipper
+REZIP=$(command -v zipify)
 
 # Print things in beautiful colors
 # This is the generic formatting function
@@ -62,9 +70,13 @@ push_game() {
     if [ -n "${STAGING+1}" ]; then
       print_yellow "staging" "$2" "not pushing"
     else
-      # Push the rom 
-      cd "${GAMESDIR}/${1}"
-      lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd ${VITA_ROMPATH}/${1} ; mput -c \"${2}.7z\""
+      # copy to the temp location
+      cp "${2}.7z" "$TMPDIR/"
+      # rezip
+      cd "$TMPDIR"
+      ${REZIP} "${2}.7z" > /dev/null
+      # Push the rom
+      lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd ${VITA_ROMPATH}/${1} ; mput -c \"${2}.zip\""
     fi
   else
     # If the rom is not found, display a message but continue
@@ -72,14 +84,51 @@ push_game() {
   fi
 }
 
+# find if we need to push an alternate game
+push_alt_game() {
+  case "$2" in
+    simpsons)
+      ALTROM="simpsons2p"
+      ;;
+    ssriders)
+      ALTROM="ssridersubc"
+      ;;
+    tmnt)
+      ALTROM="tmht2p"
+      ;;
+    tmnt2)
+      ALTROM="tmnt22pu"
+      ;;
+    xmen)
+      ALTROM="xmen2pu"
+      ;;
+    *)
+      ALTROM="puckman"
+      echo "No alternate found for $2"
+      ;;
+    esac
+    # with Konami games we need to merge or use a merged set
+    # this might not be necessary with future cases
+    push_game "$1" ${ALTROM}
+}
+
 # handle specific cases
 push_emu() {
   case "$2" in
+    ${KONAMI})
+      push_alt_game "$1" "$2"
+      ;;
     ${BOOTLEG})
       print_yellow "bootleg" "$2" "${FULLNAME}"
       ;;
     ${CONVERSION})
       print_yellow "convert" "$2" "${FULLNAME}"
+      ;;
+    ${FISHING})
+      print_yellow "fishing" "$2" "${FULLNAME}"
+      ;;
+    ${GUN})
+      print_yellow "lightgun" "$2" "${FULLNAME}"
       ;;
     ${KOREA})
       print_yellow "korea" "$2" "${FULLNAME}"
@@ -87,8 +136,11 @@ push_emu() {
     ${MAHJONG})
       print_yellow "mahjong" "$2" "${FULLNAME}"
       ;;
-    ${MATURE})
-      print_yellow "mature" "$2" "${FULLNAME}"
+    # ${MATURE})
+    #   print_yellow "mature" "$2" "${FULLNAME}"
+    #   ;;
+    ${PURIKURA})
+      print_yellow "purikura" "$2" "${FULLNAME}"
       ;;
     ${PROTOTYPE})
       print_yellow "prototype" "$2" "${FULLNAME}"
@@ -110,15 +162,15 @@ push_emu() {
 
 # find out if game will run with MAME 2003 or Final Burn Neo
 select_emu() {
-  # default emulator is MAME
-  if [ -f ${MAME2k3ROMDIR}/"$1".7z ]
+  # default emulator is first
+  if [ -f "${GAMESDIR}/${DEFAULT}/$1".7z ]
   then
-    cd ${MAME2k3ROMDIR}
-    push_emu mame2003 "$1"
-  elif [ -f $FBNEOROMDIR/"$1".7z ]
+    cd "${GAMESDIR}/${DEFAULT}/"
+    push_emu "${DEFAULT}" "$1"
+  elif [ -f "${GAMESDIR}/${SECONDARY}/$1".7z ]
   then
-    cd ${FBNEOROMDIR}/
-    push_emu fbneo "$1"
+    cd "${GAMESDIR}/${SECONDARY}/"
+    push_emu ${SECONDARY} "$1"
   else print_red "notfound" "$1" "skipping..."
   fi
 }
@@ -145,17 +197,15 @@ select_driver() {
       case "$1" in
         spidman)
           # a rare case of game renamed between MAME 2003 and modern MAME
-          print_green "mame2003" "spidman" "${FULLNAME}"
-          rsync -aq --update -e ssh spidey.7z ${PI4_USER}@${PI4_IP}:${PI4_ROMPATH}/mame2003/spidey.7z
+          push_game mame2003 spidey
           ;;
         *)
           select_emu "$1"
           ;;
       esac
       ;;
-    # blacklisted drivers
-    # some could be whitelisted for Pi4
-    namcos11|stv|jalmah|mahjong|royalmah)
+    # blacklisted drivers or just cannot run on Vita
+    namcos11|stv|jalmah|mahjong|royalmah|cps3|konamigx)
       print_red "denied" "$1" "driver not allowed"
       ;;
     *)
@@ -173,6 +223,7 @@ fi
 # main loop
 while [ $# -ne 0 ]
 do
+  echo "Default emulator is $DEFAULT"
   # find which driver this is, using current version of MAME
   # we *really* don't want to parse XML files
   # this should be replaced by a flat file though
