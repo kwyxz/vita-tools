@@ -58,7 +58,7 @@ _getname ()
         GAME=$(echo "$1" | tr '_' ' ' | tr -d '[!]')
         FULLNAME=$(basename "$GAME" "$EXTENSION")
       elif $(echo "$1" | grep -q .sc); then
-        EXTENSION=".sg"
+        EXTENSION=".sc"
         GAME=$(echo "$1" | tr '_' ' ' | tr -d '[!]')
         FULLNAME=$(basename "$GAME" "$EXTENSION")
       elif $(echo "$1" | grep -q .sg); then
@@ -225,14 +225,14 @@ do
     pce)
       EXTENSION=".pce"
       PLAYLIST="NEC - PC Engine - TurboGrafx 16.lpl"
-      LIBRETRO="app0:/mednafen_pce_fast_libretro.self"
-      LIBNAME="Mednafen PCE Fast"
+      LIBRETRO="app0:/mednafen_pce_libretro.self"
+      LIBNAME="Mednafen PCE"
       ;;
     pcecd)
       EXTENSION=".chd"
       PLAYLIST="NEC - PC Engine CD - TurboGrafx-CD.lpl"
-      LIBRETRO="app0:/mednafen_pce_fast_libretro.self"
-      LIBNAME="Mednafen PCE Fast"
+      LIBRETRO="app0:/mednafen_pce_libretro.self"
+      LIBNAME="Mednafen PCE"
       ;;
     ps1)
       EXTENSION=".cue"

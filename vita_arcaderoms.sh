@@ -3,21 +3,24 @@
 . ./settings
 
 # which emu is the default
-DEFAULT=fbneo
-SECONDARY=mame2003
+DEFAULT='fbneo'
+SECONDARY='mame2003'
+
+# current extension
+EXT='zip'
 
 # a few things to set beforehand
 SCRIPTPATH=$(pwd)
 # the location of the MAME 2003 fullset on the local host
-MAME2k3ROMDIR=$GAMESDIR/mame2003/
+MAME2k3ROMDIR="$GAMESDIR/mame2003/"
 # the location of the Final Burn Neo fullset on the local host
-FBNEOROMDIR=$GAMESDIR/fbneo/
+FBNEOROMDIR="$GAMESDIR/fbneo/"
 # the command that will be run ton establish what games are clones
 CLONES=$($MAMEBIN -listclones | awk '{print $1}' | sort | uniq)
 # the complete list of games, it saves time and RAM to just create a flat file
 $MAMEBIN -listfull | sort > ${SCRIPTPATH}/LISTFULL
 # a temporary location to rezip the ROM file
-TMPDIR=/tmp/
+TMPDIR='/tmp/'
 # where is the rezipper
 REZIP=$(command -v zipify)
 
@@ -65,18 +68,20 @@ is_clone() {
 push_game() {
   # Otherwise we upload it to the appropriate folder
   print_green "$1" "$2" "$FULLNAME"
-  if [ -f ${2}.7z ]; then
+  if [ -f "${2}.${EXT}" ]; then
     # Unless STAGING=1 is set at runtime, then we're only doing a dry run
     if [ -n "${STAGING+1}" ]; then
       print_yellow "staging" "$2" "not pushing"
     else
-      # copy to the temp location
-      cp "${2}.7z" "$TMPDIR/"
-      # rezip
-      cd "$TMPDIR"
-      ${REZIP} "${2}.7z" > /dev/null
-      # Push the rom
-      lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd ${VITA_ROMPATH}/${1} ; mput -c \"${2}.zip\""
+      if [ "${EXT}" == "7z" ]; then
+        # copy to the temp location
+        cp "${2}.${EXT}" "$TMPDIR/"
+        # rezip
+        cd "$TMPDIR"
+        ${REZIP} "${2}.${EXT}" > /dev/null
+      fi
+    # Push the rom
+    lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd ${VITA_ROMPATH}/${1} ; mput -c \"${2}.zip\""
     fi
   else
     # If the rom is not found, display a message but continue
@@ -148,9 +153,9 @@ push_emu() {
     ${QUIZZES})
       print_yellow "quiz" "$2" "${FULLNAME}"
       ;;
-    ${RACING})
-      print_yellow "racing" "$2" "${FULLNAME}"
-      ;;
+    #${RACING})
+    #  print_yellow "racing" "$2" "${FULLNAME}"
+    #  ;;
     ${REJECTS})
       print_yellow "blacklist" "$2" "${FULLNAME}"
       ;;
@@ -163,11 +168,11 @@ push_emu() {
 # find out if game will run with MAME 2003 or Final Burn Neo
 select_emu() {
   # default emulator is first
-  if [ -f "${GAMESDIR}/${DEFAULT}/$1".7z ]
+  if [ -f "${GAMESDIR}/${DEFAULT}/$1.${EXT}" ]
   then
     cd "${GAMESDIR}/${DEFAULT}/"
     push_emu "${DEFAULT}" "$1"
-  elif [ -f "${GAMESDIR}/${SECONDARY}/$1".7z ]
+  elif [ -f "${GAMESDIR}/${SECONDARY}/$1".${EXT} ]
   then
     cd "${GAMESDIR}/${SECONDARY}/"
     push_emu ${SECONDARY} "$1"
