@@ -279,6 +279,7 @@ do
     *)
       PLAYLIST=""
       echo "Hardware $CONSOLE is not supported."
+      continue
       ;;
   esac
 
