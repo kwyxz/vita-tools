@@ -15,14 +15,12 @@ SCRIPTPATH=$(pwd)
 MAME2k3ROMDIR="$GAMESDIR/mame2003/"
 # the location of the Final Burn Neo fullset on the local host
 FBNEOROMDIR="$GAMESDIR/fbneo/"
-# the command that will be run ton establish what games are clones
-CLONES=$($MAMEBIN -listclones | awk '{print $1}' | sort | uniq)
-# the complete list of games, it saves time and RAM to just create a flat file
+# the complete list of games
 $MAMEBIN -listfull | sort > ${SCRIPTPATH}/LISTFULL
-# a temporary location to rezip the ROM file
-TMPDIR='/tmp/'
-# where is the rezipper
-REZIP=$(command -v zipify)
+# the complete list of clones only
+$MAMEBIN -listclones | awk '{print $1}' | sort | uniq > ${SCRIPTPATH}/LISTCLONES
+# the complete list of drivers
+$MAMEBIN -listsource | sort | uniq > ${SCRIPTPATH}/LISTSOURCE
 
 # Print things in beautiful colors
 # This is the generic formatting function
@@ -61,27 +59,20 @@ die() {
 
 # Test if a game is present in the clone list
 is_clone() {
-  return $(echo ${CLONES} | grep -q -w ${1})
+  return $(grep -q -w -e "^${1}" ${SCRIPTPATH}/LISTCLONES)
 }
 
 # Upload a game to the remote host
 push_game() {
   # Otherwise we upload it to the appropriate folder
-  print_green "$1" "$2" "$FULLNAME"
   if [ -f "${2}.${EXT}" ]; then
     # Unless STAGING=1 is set at runtime, then we're only doing a dry run
     if [ -n "${STAGING+1}" ]; then
       print_yellow "staging" "$2" "not pushing"
     else
-      if [ "${EXT}" == "7z" ]; then
-        # copy to the temp location
-        cp "${2}.${EXT}" "$TMPDIR/"
-        # rezip
-        cd "$TMPDIR"
-        ${REZIP} "${2}.${EXT}" > /dev/null
-      fi
     # Push the rom
     lftp -c "open -u anonymous,blah $VITA_IP:$VITA_PORT ; cd ${VITA_ROMPATH}/${1} ; mput -c \"${2}.zip\""
+    print_green "$1" "$2" "$FULLNAME"
     fi
   else
     # If the rom is not found, display a message but continue

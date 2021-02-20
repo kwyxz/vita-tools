@@ -6,7 +6,8 @@ VITA_PORT='1337'
 
 # Remote paths
 HOMEBREWPATH='uma0:'
-VITA_ROMPATH="${HOMEBREWPATH}/"
+VITA_ROMPATH="${HOMEBREWPATH}/roms"
+N64_ROMPATH='ux0:/data/DaedalusX64/Roms'
 RETROPATH='ux0:/data/retroarch'
 
 # GCW network settings
